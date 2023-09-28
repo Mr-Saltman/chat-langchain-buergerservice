@@ -1,0 +1,15 @@
+openai
+fastapi
+black
+isort
+websockets
+pydantic
+langchain
+uvicorn
+jinja2
+faiss-cpu
+bs4
+unstructured
+libmagic
+python-dotenv==1.0.0
+tiktoken

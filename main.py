@@ -6,7 +6,6 @@ from operator import itemgetter
 from typing import AsyncIterator, Dict, List, Optional, Sequence
 
 import langsmith
-import weaviate
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -20,11 +19,11 @@ from langchain.schema.messages import AIMessage, HumanMessage
 from langchain.schema.output_parser import StrOutputParser
 from langchain.schema.retriever import BaseRetriever
 from langchain.schema.runnable import Runnable, RunnableMap
-from langchain.vectorstores import Weaviate
+from langchain.vectorstores.faiss import FAISS
 from langsmith import Client
 from pydantic import BaseModel
 
-from constants import WEAVIATE_DOCS_INDEX_NAME
+import constants
 
 RESPONSE_TEMPLATE = """\
 You are an expert programmer and problem-solver, tasked with answering any question \
@@ -79,24 +78,11 @@ app.add_middleware(
 )
 
 
-WEAVIATE_URL = os.environ["WEAVIATE_URL"]
-WEAVIATE_API_KEY = os.environ["WEAVIATE_API_KEY"]
-
-
 def get_retriever() -> BaseRetriever:
-    weaviate_client = weaviate.Client(
-        url=WEAVIATE_URL,
-        auth_client_secret=weaviate.AuthApiKey(api_key=WEAVIATE_API_KEY),
+    embeddings = OpenAIEmbeddings()
+    return FAISS.load_local("data/schrems_index", embeddings).as_retriever(
+        search_kwargs=dict(k=6)
     )
-    weaviate_client = Weaviate(
-        client=weaviate_client,
-        index_name=WEAVIATE_DOCS_INDEX_NAME,
-        text_key="text",
-        embedding=OpenAIEmbeddings(chunk_size=200),
-        by_text=False,
-        attributes=["source", "title"],
-    )
-    return weaviate_client.as_retriever(search_kwargs=dict(k=6))
 
 
 def create_retriever_chain(

@@ -143,3 +143,9 @@ bin/
 pyvenv.cfg
 node_modules/
 .envrc
+
+# local files & other stuff
+
+.vscode
+data/
+archive/
