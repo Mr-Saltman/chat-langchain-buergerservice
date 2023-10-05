@@ -23,7 +23,9 @@ from langchain.vectorstores.faiss import FAISS
 from langsmith import Client
 from pydantic import BaseModel
 
-import constants
+from dotenv import load_dotenv
+
+load_dotenv()
 
 RESPONSE_TEMPLATE = """\
 You are an expert programmer and problem-solver, tasked with answering any question \

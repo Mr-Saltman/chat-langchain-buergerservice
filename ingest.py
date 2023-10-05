@@ -8,13 +8,10 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores.faiss import FAISS
 from langchain.document_transformers import BeautifulSoupTransformer
 
-import constants
-
-"""
 from dotenv import load_dotenv
 
 load_dotenv()
-"""
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
